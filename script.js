@@ -10,16 +10,35 @@ bgImage.onload = function (){
 };
 bgImage.src = "./background.png"
 
-let hero = {
-    speed: 256,
-    x: 0,
-    y: 0,
+let heroReady = false;
+let heroImage = new Image();
+heroImage.onload = function(){
+    heroReady = true;
 };
+heroImage.src = "./hero.png"
 
-let monster = {
-    x: 0,
-    y: 0
+let monsterReady = false;
+let monsterImage = new Image();
+monsterImage.onload = function(){
+    monsterImage = true;
 };
+monsterImage.src = "./monster.png"
+
+// let hero = {
+//     speed: 256,
+//     x: 0,
+//     y: 0,
+// };
+
+// let monster = {
+//     x: 100,
+//     y: 50,
+// };
+
+let hero = {
+    speed: 256
+}
+let monster = {};
 
 let monstersCaught = 0;
 
@@ -37,25 +56,25 @@ addEventListener("keyup", function(e) {
 
 //New Game Function
 let reset = function(){
-    hero.x = canvas.width /2;
-    hero.y = canvas.height /2;
+    hero.x = canvas.width / 2;
+    hero.y = canvas.height / 2;
 //randomly spawn monster position
-    monster.x = 32 + (Math.random() * (canvas.width - 64));
-    monster.y = 32 + (Math.random() * (canvas.height - 64));
+    monster.x = 32 + (Math.random() * (canvas.width - 96));
+    monster.y = 32 + (Math.random() * (canvas.height - 96));
 }
 
 //update game objects
 let update = function(modifier){
-    if(ArrowUp in keysDown){
+    if('ArrowUp' in keysDown){
         hero.y -= hero.speed * modifier;
     };
-    if(ArrowDown in keysDown){
+    if('ArrowDown' in keysDown){
         hero.y += hero.speed * modifier;
     };
-    if(ArrowLeft in keysDown){
+    if('ArrowLeft' in keysDown){
         hero.x -= hero.speed * modifier;
     };
-    if(ArrowRight in keysDown){
+    if('ArrowRight' in keysDown){
         hero.x += hero.speed * modifier;
     };
 
@@ -89,3 +108,22 @@ let render = function(){
     ctx.textBaseline = "top";
     ctx.fillText("Monsters caught: " + monstersCaught, 32, 32);
 };
+
+//game loop
+let main = function(){
+    let now = Date.now();
+    let delta = now - then;
+
+    update(delta / 1000);
+    render();
+
+    then = now;
+    requestAnimationFrame(main);
+};
+
+let w = window;
+requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
+
+let then = Date.now();
+reset();
+main();
